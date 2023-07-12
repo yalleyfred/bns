@@ -7,7 +7,7 @@ RUN mvn clean package -DskipTests
 #
 FROM eclipse-temurin:17-jdk
 COPY --from=build /app/target/bns.jar app.jar
-COPY data.json .env /
+COPY data.json /
 EXPOSE 9090
 ENTRYPOINT ["java","-jar","app.jar"]
 
