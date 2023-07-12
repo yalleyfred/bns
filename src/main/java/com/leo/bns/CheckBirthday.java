@@ -28,6 +28,32 @@ public class CheckBirthday {
         return null;
     }
 
+    public static String convertToCamelCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        // Split the string into words based on whitespace
+        String[] words = input.trim().split("\\s+");
+
+        StringBuilder result = new StringBuilder();
+
+        // Capitalize the first letter of each word, except for the first word
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (i == 0) {
+                // Keep the first word as is
+                result.append(word.toLowerCase());
+            } else {
+                // Capitalize the first letter of subsequent words
+                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
+            }
+        }
+
+        return result.toString();
+    }
+
+
     public static List<String> getUpcomingBirthdays(JSONObject jsonData) {
         List<String> upcomingBirthdays = new ArrayList<>();
 
