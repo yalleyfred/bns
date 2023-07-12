@@ -1,6 +1,8 @@
 package com.leo.bns;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -12,44 +14,46 @@ import java.util.Properties;
 
 public class EmailService {
 
-    public static JSONObject getEnvVariables() {
-        JSONObject jsonData = new JSONObject();
-        try{
-            Properties fileProps = new Properties();
-            FileInputStream fileInputStream = new FileInputStream(".env");
-
-            fileProps.load(fileInputStream);
-
-            // Access specific environment variables from the file
-            String mailHost = fileProps.getProperty("MAIL_HOST");
-            String mailFrom = fileProps.getProperty("MAIL_FROM");
-            String mailPassword = fileProps.getProperty("MAIL_PASSWORD");
-            String mailPort = fileProps.getProperty("MAIL_PORT");
-
-            // Use the environment variables from the file
-            System.out.println(mailPort);
-
-            jsonData.put("MAIL_HOST", mailHost);
-            jsonData.put("MAIL_FROM", mailFrom);
-            jsonData.put("MAIL_PASSWORD", mailPassword);
-            jsonData.put("MAIL_PORT", mailPort);
-
-            return jsonData;
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return jsonData;
-    }
+    @Autowired
+    private static Environment env;
+//    public static JSONObject getEnvVariables() {
+//        JSONObject jsonData = new JSONObject();
+//        try{
+//            Properties fileProps = new Properties();
+//            FileInputStream fileInputStream = new FileInputStream(".env");
+//
+//            fileProps.load(fileInputStream);
+//
+//            // Access specific environment variables from the file
+//            String mailHost = fileProps.getProperty("MAIL_HOST");
+//            String mailFrom = fileProps.getProperty("MAIL_FROM");
+//            String mailPassword = fileProps.getProperty("MAIL_PASSWORD");
+//            String mailPort = fileProps.getProperty("MAIL_PORT");
+//
+//            // Use the environment variables from the file
+//            System.out.println(mailPort);
+//
+//            jsonData.put("MAIL_HOST", mailHost);
+//            jsonData.put("MAIL_FROM", mailFrom);
+//            jsonData.put("MAIL_PASSWORD", mailPassword);
+//            jsonData.put("MAIL_PORT", mailPort);
+//
+//            return jsonData;
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return jsonData;
+//    }
 
     public static JavaMailSender createJavaMailSender() {
-        JSONObject env = getEnvVariables();
-        int port = Integer.parseInt((String) env.get("MAIL_PORT"));
+
+        int port = Integer.parseInt((String) env.getProperty("MAIL_PORT"));
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost((String) env.get("MAIL_HOST"));
+        mailSender.setHost((String) env.getProperty("MAIL_HOST"));
         mailSender.setPort(port);
-        mailSender.setUsername((String) env.get("MAIL_FROM"));
-        mailSender.setPassword((String) env.get("MAIL_PASSWORD"));
+        mailSender.setUsername((String) env.getProperty("MAIL_FROM"));
+        mailSender.setPassword((String) env.getProperty("MAIL_PASSWORD"));
 
         // Enable STARTTLS encryption
         Properties props = mailSender.getJavaMailProperties();
@@ -59,8 +63,8 @@ public class EmailService {
     }
 
     public static void sendEmailNotification(List<String> upcomingBirthdays) {
-        JSONObject env = getEnvVariables();
-        String senderEmail = (String) env.get("MAIL_FROM");
+
+        String senderEmail = (String) env.getProperty("MAIL_FROM");
 
         JavaMailSender mailSender = createJavaMailSender();
 
