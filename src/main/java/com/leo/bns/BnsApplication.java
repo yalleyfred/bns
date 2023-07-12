@@ -6,10 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.json.simple.JSONObject;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.FileWriter;
 
 
@@ -47,7 +45,7 @@ public class BnsApplication {
 		// To print in JSON format.
 		jsonData.put("members", persons);
 
-
+		System.out.println("nma");
 
 		try (FileWriter file = new FileWriter("data.json")) {
 			file.write(jsonData.toString());
@@ -58,6 +56,21 @@ public class BnsApplication {
 
 		}
 	}
+
+	@DeleteMapping
+	public void deleteAllMembers() {
+		JSONObject jsonData = birthdayService.readJSONFromFile("data.json");
+		jsonData.put("members", new JSONArray());
+
+		try (FileWriter file = new FileWriter("data.json")) {
+			file.write(jsonData.toString());
+			System.out.println("Successfully deleted all members...");
+			System.out.println("\nJSON Object: " + jsonData);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
 }
 
 
