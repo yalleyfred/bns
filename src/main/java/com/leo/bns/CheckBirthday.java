@@ -4,7 +4,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,10 +15,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class CheckBirthday {
-
+    @Autowired
     private EmailService emailService;
-    public static JSONObject readJSONFromFile(String filePath) {
+    public JSONObject readJSONFromFile(String filePath) {
         JSONParser jsonParser = new JSONParser();
         try (FileReader fileReader = new FileReader(filePath)) {
             Object obj = jsonParser.parse(fileReader);
@@ -28,33 +31,8 @@ public class CheckBirthday {
         return null;
     }
 
-    public static String convertToCamelCase(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
 
-        // Split the string into words based on whitespace
-        String[] words = input.trim().split("\\s+");
-
-        StringBuilder result = new StringBuilder();
-
-        // Capitalize the first letter of each word, except for the first word
-        for (int i = 0; i < words.length; i++) {
-            String word = words[i];
-            if (i == 0) {
-                // Keep the first word as is
-                result.append(word.toLowerCase());
-            } else {
-                // Capitalize the first letter of subsequent words
-                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
-            }
-        }
-
-        return result.toString();
-    }
-
-
-    public static List<String> getUpcomingBirthdays(JSONObject jsonData) {
+    public List<String> getUpcomingBirthdays(JSONObject jsonData) {
         List<String> upcomingBirthdays = new ArrayList<>();
 
         JSONArray persons = (JSONArray) jsonData.get("members");
@@ -77,12 +55,13 @@ public class CheckBirthday {
             }
 
         }
+        System.out.println(upcomingBirthdays);
         return upcomingBirthdays;
     }
 
 
-    @Scheduled(cron = "0 0 0 * * ?")
-    public static void notification() {
+
+    public void notification() {
 
         JSONObject jsonData = readJSONFromFile("data.json");
         if (jsonData != null) {
@@ -90,7 +69,7 @@ public class CheckBirthday {
             List<String> upcomingBirthdays = getUpcomingBirthdays(jsonData);
             // Send email notification
             if (!upcomingBirthdays.isEmpty()) {
-                EmailService.sendEmailNotification(upcomingBirthdays);
+                emailService.sendEmailNotification(upcomingBirthdays);
             }
         }
     }
