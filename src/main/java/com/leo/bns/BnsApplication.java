@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.json.simple.JSONObject;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileWriter;
@@ -20,6 +21,7 @@ import java.io.FileWriter;
 @RequestMapping("/api")
 public class BnsApplication {
 
+	@Autowired
 	private CheckBirthday birthdayService;
 
 	@Autowired
@@ -27,7 +29,11 @@ public class BnsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BnsApplication.class, args);
-		CheckBirthday.notification();
+	}
+
+	@Scheduled(cron = "0 0 6,18 * * *") // Runs at 6 AM and 6 PM
+	public void scheduleBirthdayNotification() {
+		birthdayService.notification();
 	}
 
 
