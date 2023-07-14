@@ -31,11 +31,15 @@ public class BnsApplication {
 		SpringApplication.run(BnsApplication.class, args);
 	}
 
-	@Scheduled(cron = "30 9,12 * * * *") // Runs at 6 AM and 6 PM
-	public void scheduleBirthdayNotification() {
+	@Scheduled(cron = "0 0 6 * * *")
+	public void scheduleBirthdayNotificationAM() {
 		birthdayService.notification();
 	}
 
+	@Scheduled(cron = "0 0 18 * * *")
+	public void scheduleBirthdayNotificationPM() {
+		birthdayService.notification();
+	}
 
 	@PostMapping("/member")
 	public void addMember(@RequestBody JSONObject memberData, @RequestParam String password) {
