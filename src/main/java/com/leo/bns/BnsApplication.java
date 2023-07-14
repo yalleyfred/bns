@@ -31,7 +31,7 @@ public class BnsApplication {
 		SpringApplication.run(BnsApplication.class, args);
 	}
 
-	@Scheduled(cron = "0 0 6,18 * * *") // Runs at 6 AM and 6 PM
+	@Scheduled(cron = "0 */5 * * * *") // Runs at 6 AM and 6 PM
 	public void scheduleBirthdayNotification() {
 		birthdayService.notification();
 	}
