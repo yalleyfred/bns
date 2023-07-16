@@ -68,7 +68,7 @@ public class CheckBirthday {
             List<String> upcomingBirthdays = getUpcomingBirthdays(jsonData);
             // Send email notification
             if (!upcomingBirthdays.isEmpty()) {
-//                emailService.sendEmailNotification(upcomingBirthdays);
+                emailService.sendEmailNotification(upcomingBirthdays);
             }
         }
     }
