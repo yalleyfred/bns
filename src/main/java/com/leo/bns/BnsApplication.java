@@ -10,10 +10,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileWriter;
-
-
+import java.io.InputStreamReader;
+import java.util.List;
+import com.opencsv.CSVReader;
 
 @SpringBootApplication
 @EnableScheduling
@@ -59,7 +61,7 @@ public class BnsApplication {
 		String dateOfBirth = (String) memberData.get("dateOfBirth");
 		String email = (String) memberData.get("email");
 		String position = (String) memberData.get("position");
-		String address = (String) memberData.get("address");
+		String address = (String) memberData.get("whereYouStay");
 		String phoneNumber = (String) memberData.get("phoneNumber");
 
 		data.put("name", name);
@@ -126,6 +128,9 @@ public class BnsApplication {
 			System.out.println(e);
 		}
 	}
+
+
+
 
 
 
