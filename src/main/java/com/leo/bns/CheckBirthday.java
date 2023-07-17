@@ -61,7 +61,6 @@ public class CheckBirthday {
 
 
     public void notification() {
-
         JSONObject jsonData = readJSONFromFile("data.json");
         if (jsonData != null) {
             // Check if any DOB is two days before the current date
