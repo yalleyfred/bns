@@ -39,11 +39,7 @@ public class BnsApplication {
 		birthdayService.notification();
 	}
 
-	@Scheduled(cron = "0 0 18 * * *")
-	@GetMapping("notification")
-	public void scheduleBirthdayNotificationPM() {
-		birthdayService.notification();
-	}
+
 
 	@PostMapping("/member")
 	public void addMember(@RequestBody JSONObject memberData, @RequestParam String password) {
