@@ -33,16 +33,17 @@ public class BnsApplication {
 		SpringApplication.run(BnsApplication.class, args);
 	}
 
-//	@Scheduled(cron = "0 0 11 * * *")
+	@Scheduled(cron = "0 0 6 * * *")
 	@GetMapping("notification")
 	public void scheduleBirthdayNotificationAM() {
 		birthdayService.notification();
 	}
 
-//	@Scheduled(cron = "0 0 10 * * *")
-//	public void scheduleBirthdayNotificationPM() {
-//		birthdayService.notification();
-//	}
+	@Scheduled(cron = "0 0 18 * * *")
+	@GetMapping("notification")
+	public void scheduleBirthdayNotificationPM() {
+		birthdayService.notification();
+	}
 
 	@PostMapping("/member")
 	public void addMember(@RequestBody JSONObject memberData, @RequestParam String password) {
