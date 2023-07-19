@@ -40,7 +40,7 @@ public class BnsApplication {
 	}
 
 
-	@Scheduled(cron = "0 * * * *")
+	@Scheduled(cron = " 0 * * * * *")
 	public void scheduleBirthdayNotificationPM() {
 		birthdayService.notification();
 	}
