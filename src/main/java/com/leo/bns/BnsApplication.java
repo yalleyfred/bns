@@ -33,7 +33,7 @@ public class BnsApplication {
 		SpringApplication.run(BnsApplication.class, args);
 	}
 
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 */1 * * * *")
 	@GetMapping("notification")
 	public void scheduleBirthdayNotificationAM() {
 		birthdayService.notification();
