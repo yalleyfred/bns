@@ -29,6 +29,13 @@ public class BnsApplication {
 	@Autowired
 	private Environment env;
 
+	private SendSMS smsService;
+
+	@Autowired
+	public BnsApplication(SendSMS smsService) {
+		this.smsService = smsService;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(BnsApplication.class, args);
 	}
@@ -37,6 +44,8 @@ public class BnsApplication {
 	@GetMapping("notification")
 	public void scheduleBirthdayNotificationAM() {
 		birthdayService.notification();
+//		smsService.sendSms("+233209539770", "hi");
+//		smsService.performValidation();
 	}
 
 
@@ -86,47 +95,59 @@ public class BnsApplication {
 	}
 
 	@PostMapping("/members")
-	public void addMembers(@RequestBody MembersRequest request, @RequestParam String password) {
-
+	public void addMembers(@RequestParam("file") MultipartFile file, @RequestParam String password) {
 		// Check the password here
 		if (!password.equals(env.getProperty("API_PASSWORD"))) {
 			System.out.println("Incorrect password. Access denied.");
 			return;
 		}
 
-		JSONObject jsonData = birthdayService.readJSONFromFile("data.json");
-		JSONArray persons = (JSONArray) jsonData.get("members");
+		try {
+			CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream()));
+			List<String[]> rows = csvReader.readAll();
+			csvReader.close();
 
-		for (MemberData memberData : request.getMembers()) {
-			JSONObject data = new JSONObject();
+			JSONObject jsonData = new JSONObject();
+			JSONArray persons = new JSONArray();
+			boolean isFirstRow = true;
+			// Assuming the CSV structure: name, dateOfBirth, email, position, address, phoneNumber
+			for (String[] row : rows) {
+				if (isFirstRow) {
+					isFirstRow = false;
+					continue; // Skip the first row (headings)
+				}
+				JSONObject data = new JSONObject();
 
+				String name = row[0];
+				String dateOfBirth = row[1];
+				String email = row[2];
+				String position = row[3];
+				String address = row[4];
+				String phoneNumber = row[5];
+				System.out.println(dateOfBirth);
+				data.put("name", name);
+				data.put("dateOfBirth", dateOfBirth);
+				data.put("email", email);
+				data.put("position", position);
+				data.put("address", address);
+				data.put("phoneNumber", phoneNumber);
 
-			String name = memberData.getName();
-			String dateOfBirth = memberData.getDateOfBirth();
-			String email = memberData.getEmail();
-			String position = memberData.getPosition();
-			String address = memberData.getWhereYouStay();
-			String phoneNumber = memberData.getPhoneNumber();
+				persons.add(data);
+			}
 
-			data.put("name", name);
-			data.put("dateOfBirth", dateOfBirth);
-			data.put("email", email);
-			data.put("position", position);
-			data.put("address", address);
-			data.put("phoneNumber", phoneNumber);
+			// To print in JSON format.
+			jsonData.put("members", persons);
 
-			persons.add(data);
-		}
-
-		// To print in JSON format.
-		jsonData.put("members", persons);
-
-		try (FileWriter file = new FileWriter("data.json")) {
-			file.write(jsonData.toString());
-			System.out.println("Successfully Copied JSON Object to File...");
-			System.out.println("\nJSON Object: " + jsonData);
+			try (FileWriter fileWriter = new FileWriter("data.json")) {
+				fileWriter.write(jsonData.toString());
+				System.out.println("Successfully created JSON file...");
+				System.out.println("\nJSON Object: " + jsonData);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Error occurred while parsing the CSV file.");
+			e.printStackTrace();
 		}
 	}
 
