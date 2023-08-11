@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.json.simple.JSONObject;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +18,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import com.opencsv.CSVReader;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableScheduling
 @RestController()
 @RequestMapping("/api")
@@ -71,8 +72,14 @@ public class BnsApplication {
 		String dateOfBirth = (String) memberData.get("dateOfBirth");
 		String email = (String) memberData.get("email");
 		String position = (String) memberData.get("position");
-		String address = (String) memberData.get("whereYouStay");
+		String address = (String) memberData.get("address");
 		String phoneNumber = (String) memberData.get("phoneNumber");
+		String gender = (String) memberData.get("gender");
+		String occupation = (String) memberData.get("occupation");
+		String emergencyContact = (String) memberData.get("emergencyContact");
+		String skills = (String) memberData.get("skills");
+		String pictures = (String) memberData.get("pictures");
+		String consent = (String) memberData.get("consent");
 
 		data.put("name", name);
 		data.put("dateOfBirth", dateOfBirth);
@@ -80,6 +87,13 @@ public class BnsApplication {
 		data.put("position", position);
 		data.put("address", address);
 		data.put("phoneNumber", phoneNumber);
+		data.put("gender", gender);
+		data.put("occupation", occupation);
+		data.put("emergencyContact", emergencyContact);
+		data.put("skills", skills);
+		data.put("pictures", pictures);
+		data.put("consent", consent);
+
 
 		persons.add(data);
 		// To print in JSON format.
@@ -118,12 +132,19 @@ public class BnsApplication {
 				}
 				JSONObject data = new JSONObject();
 
-				String name = row[0];
-				String dateOfBirth = row[1];
-				String email = row[2];
-				String position = row[3];
-				String address = row[4];
-				String phoneNumber = row[5];
+				String name = row[1];
+				String dateOfBirth = row[6];
+				String email = row[0];
+				String position = row[2];
+				String address = row[5];
+				String phoneNumber = row[4];
+				String gender = row[3];
+				String occupation = row[7];
+				String emergencyContact = row[9];
+				String skills = row[10];
+				String pictures = row[8];
+				String consent = row[11];
+
 				System.out.println(dateOfBirth);
 				data.put("name", name);
 				data.put("dateOfBirth", dateOfBirth);
@@ -131,6 +152,12 @@ public class BnsApplication {
 				data.put("position", position);
 				data.put("address", address);
 				data.put("phoneNumber", phoneNumber);
+				data.put("gender", gender);
+				data.put("occupation", occupation);
+				data.put("emergencyContact", emergencyContact);
+				data.put("skills", skills);
+				data.put("pictures", pictures);
+				data.put("consent", consent);
 
 				persons.add(data);
 			}

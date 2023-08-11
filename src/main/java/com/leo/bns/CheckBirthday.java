@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CheckBirthday {
@@ -33,8 +35,8 @@ public class CheckBirthday {
     }
 
 
-    public List<String> getUpcomingBirthdays(JSONObject jsonData) {
-        List<String> upcomingBirthdays = new ArrayList<>();
+    public List<Map<String, String>> getUpcomingBirthdays(JSONObject jsonData) {
+        List<Map<String, String>> upcomingBirthdays = new ArrayList<>();
 
         JSONArray persons = (JSONArray) jsonData.get("members");
         LocalDate currentDate = LocalDate.now();
@@ -45,22 +47,26 @@ public class CheckBirthday {
             String dobString = (String) person.get("dateOfBirth");
 
             // Parse date string with custom formatter
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate dob = LocalDate.parse(dobString, formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dob = LocalDate.parse(dobString, formatter).minusDays(2);
             System.out.println(dob);
 
-            LocalDate twoDaysBefore = currentDate.minusDays(2);
+//            LocalDate date = currentDate;
             int dobMonth = dob.getMonthValue();
             int dobDay = dob.getDayOfMonth();
-            int currentMonth = twoDaysBefore.getMonthValue();
-            int currentDay = twoDaysBefore.getDayOfMonth();
+            int currentMonth = currentDate.getMonthValue();
+            int currentDay = currentDate.getDayOfMonth();
             System.out.println(dobDay);
             System.out.println(currentDay);
             if (dobMonth == currentMonth && dobDay == currentDay) {
-                System.out.println(currentMonth);
                 String name = (String) person.get("name");
-                upcomingBirthdays.add(name);
+                String position = (String) person.get("position");
+                Map<String, String> birthdayInfo = new HashMap<>();
+                birthdayInfo.put("name", name);
+                birthdayInfo.put("position", position);
+                upcomingBirthdays.add(birthdayInfo);
             }
+
         }
 
         System.out.println(upcomingBirthdays);
@@ -74,7 +80,7 @@ public class CheckBirthday {
         JSONObject jsonData = readJSONFromFile("data.json");
         if (jsonData != null) {
             // Check if any DOB is two days before the current date
-            List<String> upcomingBirthdays = getUpcomingBirthdays(jsonData);
+            List<Map<String, String>> upcomingBirthdays = getUpcomingBirthdays(jsonData);
             // Send email notification
             if (!upcomingBirthdays.isEmpty()) {
                 emailService.sendEmailNotification(upcomingBirthdays);

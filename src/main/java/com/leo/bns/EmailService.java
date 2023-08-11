@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 @Service
@@ -36,7 +37,7 @@ public class EmailService {
         return mailSender;
     }
 
-    public  void sendEmailNotification(List<String> upcomingBirthdays) {
+    public  void sendEmailNotification(List<Map<String, String>> upcomingBirthdays) {
 
         String senderEmail = (String) env.getProperty("MAIL_FROM");
 
@@ -45,14 +46,27 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(senderEmail);
         message.setTo("yalleyfred@gmail.com");
-        message.setSubject("Birthday");
+        message.setSubject("Members Birthday Notification");
         StringBuilder emailContent = new StringBuilder();
-        emailContent.append("Today is someone's birthday");
-        emailContent.append("\n\nUpcoming Birthdays:\n");
-        for (String name : upcomingBirthdays) {
-            emailContent.append("- ").append(name).append("\n");
+        emailContent.append("🎉 Upcoming Birthdays in Takoradi Oil City Leos 🦁");
+        emailContent.append("\n\nHello Leos,");
+        emailContent.append("\n\nGet ready to celebrate some special moments within our pride. Here are the upcoming birthdays:");
+
+        for (int i = 0; i < upcomingBirthdays.size(); i++) {
+            Map<String, String> birthdayInfo = upcomingBirthdays.get(i);
+            String name = birthdayInfo.get("name");
+            String position = birthdayInfo.get("position");
+            int displayPosition = i + 1;  // Adding 1 to start counting from 1 instead of 0
+            emailContent.append("\n\n🎂 ").append(displayPosition).append(". ").append(name).append(" (Position: ").append(position).append(")");
         }
+
+
+        emailContent.append("\n\nLet's make these days extra special with our heartfelt wishes and joyous celebrations!");
+
+        emailContent.append("\n\nBest regards,\nTakoradi Oil City Leos");
+
         message.setText(emailContent.toString());
+
 
         mailSender.send(message);
         System.out.println("Email notification sent successfully to yalleyfred@gmail.com");
