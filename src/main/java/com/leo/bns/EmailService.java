@@ -45,7 +45,7 @@ public class EmailService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(senderEmail);
-        message.setTo("yalleyfred@gmail.com");
+        message.setTo("youngleadersleoclub@gmail.com");
         message.setSubject("Members Birthday Notification");
         StringBuilder emailContent = new StringBuilder();
         emailContent.append("🎉 Upcoming Birthdays in Takoradi Oil City Leos 🦁");

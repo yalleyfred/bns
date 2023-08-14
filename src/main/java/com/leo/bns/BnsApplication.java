@@ -41,12 +41,10 @@ public class BnsApplication {
 		SpringApplication.run(BnsApplication.class, args);
 	}
 
-	@Scheduled(cron = "0 0 6 * * *")
+	@Scheduled(cron = "0 0 12 * * *")
 	@GetMapping("notification")
 	public void scheduleBirthdayNotificationAM() {
 		birthdayService.notification();
-//		smsService.sendSms("+233209539770", "hi");
-//		smsService.performValidation();
 	}
 
 
@@ -54,6 +52,20 @@ public class BnsApplication {
 	public void scheduleBirthdayNotificationPM() {
 		birthdayService.notification();
 	}
+
+	@GetMapping("/members")
+	public JSONObject getAllMembers(@RequestParam String password) {
+		JSONObject jsonData = new JSONObject();
+		if (!password.equals(env.getProperty("API_PASSWORD"))) {
+			System.out.println("Incorrect password. Access denied.");
+			return jsonData;
+		}
+
+		 jsonData = birthdayService.readJSONFromFile("data.json");
+		return jsonData;
+	}
+
+
 	@PostMapping("/member")
 	public void addMember(@RequestBody JSONObject memberData, @RequestParam String password) {
 
