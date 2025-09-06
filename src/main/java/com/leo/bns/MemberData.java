@@ -1,17 +1,39 @@
 package com.leo.bns;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import java.util.Objects;
+
 public class MemberData {
+    @NotBlank(message = "Name is required")
     private String name;
+    
+    @NotBlank(message = "Date of birth is required")
+    @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$", message = "Date of birth must be in format DD/MM/YYYY")
     private String dateOfBirth;
+    
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
+    
+    @NotBlank(message = "Position is required")
     private String position;
+    
     private String address;
+    
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number format")
     private String phoneNumber;
+    
     private String gender;
     private String skills;
     private String pictures;
     private String occupation;
+    
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid emergency contact format")
     private String emergencyContact;
+    
+    @NotBlank(message = "Consent is required")
     private String consent;
 
 
@@ -110,5 +132,41 @@ public class MemberData {
 
     public void setSkills(String skills) {
         this.skills = skills;
+    }
+    
+    // Constructor
+    public MemberData() {}
+    
+    // Constructor with required fields
+    public MemberData(String name, String dateOfBirth, String email, String position, String consent) {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.position = position;
+        this.consent = consent;
+    }
+    
+    // equals and hashCode
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        MemberData that = (MemberData) obj;
+        return Objects.equals(email, that.email);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
+    
+    // toString
+    @Override
+    public String toString() {
+        return "MemberData{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", position='" + position + '\'' +
+                '}';
     }
 }

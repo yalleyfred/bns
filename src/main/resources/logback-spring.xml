@@ -1,0 +1,19 @@
+# Logging Configuration
+logging.level.com.leo.bns=INFO
+logging.level.org.springframework.web=WARN
+logging.level.org.springframework.security=WARN
+logging.level.org.hibernate=WARN
+
+# Log to file and console
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+logging.pattern.file=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+
+# File logging
+logging.file.name=logs/bns-application.log
+logging.file.max-size=10MB
+logging.file.max-history=7
+
+# Application Information
+app.name=Birthday Notification System
+app.version=1.0.0
+app.description=Automated birthday notification system for organizations
