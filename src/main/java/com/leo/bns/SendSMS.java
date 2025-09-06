@@ -14,17 +14,34 @@ import java.net.URI;
 import java.math.BigDecimal;
 @Service
 public class SendSMS {
-    // Find your Account Sid and Token at twilio.com/console
     @Autowired
     private Environment env;
-    public static final String ACCOUNT_SID = "ACc266508ff8ca39c4e7ea53a30e5d1f59";
-    public static final String AUTH_TOKEN = "7673e17500518bba6cec190f037286fd";
+    
+    private String getAccountSid() {
+        return env.getProperty("twilio.account.sid");
+    }
+    
+    private String getAuthToken() {
+        return env.getProperty("twilio.auth.token");
+    }
+    
+    private String getPhoneNumber() {
+        return env.getProperty("twilio.phone.number");
+    }
+    
+    private String getValidationPhone() {
+        return env.getProperty("twilio.validation.phone");
+    }
+    
+    private String getCallbackUrl() {
+        return env.getProperty("twilio.callback.url");
+    }
 
     public void sendSms(String toPhoneNumber, String messageBody) {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Twilio.init(getAccountSid(), getAuthToken());
         Message message = Message.creator(
                         new com.twilio.type.PhoneNumber(toPhoneNumber),
-                        new com.twilio.type.PhoneNumber("+17622488128"),
+                        new com.twilio.type.PhoneNumber(getPhoneNumber()),
                         messageBody)
                 .create();
 
@@ -32,13 +49,13 @@ public class SendSMS {
     }
 
     public void performValidation() {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Twilio.init(getAccountSid(), getAuthToken());
 
         ValidationRequest validationRequest = ValidationRequest.creator(
-                        new com.twilio.type.PhoneNumber("+233209539770"))
+                        new com.twilio.type.PhoneNumber(getValidationPhone()))
                 .setFriendlyName("Third Party VOIP Number")
                 .setStatusCallback(
-                        URI.create("https://somefunction.twil.io/caller-id-validation-callback"))
+                        URI.create(getCallbackUrl()))
                 .create();
 
         System.out.println("Validation Request Friendly Name: " + validationRequest.getFriendlyName());

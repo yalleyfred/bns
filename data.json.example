@@ -1,0 +1,18 @@
+{
+  "members": [
+    {
+      "skills": "Example skills",
+      "address": "Example address",
+      "phoneNumber": "1234567890",
+      "occupation": "Example occupation",
+      "gender": "Example gender",
+      "emergencyContact": "1234567890",
+      "name": "Example Name",
+      "dateOfBirth": "01/01/1990",
+      "position": "Example Position",
+      "consent": "I Agree",
+      "email": "example@example.com",
+      "pictures": "example_picture_urls"
+    }
+  ]
+}

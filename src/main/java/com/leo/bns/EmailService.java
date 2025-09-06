@@ -45,10 +45,10 @@ public class EmailService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(senderEmail);
-        message.setTo("youngleadersleoclub@gmail.com");
+        message.setTo(env.getProperty("MAIL_TO"));
         message.setSubject("Members Birthday Notification");
         StringBuilder emailContent = new StringBuilder();
-        emailContent.append("🎉 Upcoming Birthdays in Takoradi Oil City Leos 🦁");
+        emailContent.append("🎉 Upcoming Birthdays in ").append(env.getProperty("organization.name")).append(" 🦁");
         emailContent.append("\n\nHello Leos,");
         emailContent.append("\n\nGet ready to celebrate some special moments within our pride. Here are the upcoming birthdays:");
 
@@ -63,12 +63,12 @@ public class EmailService {
 
         emailContent.append("\n\nLet's make these days extra special with our heartfelt wishes and joyous celebrations!");
 
-        emailContent.append("\n\nBest regards,\nTakoradi Oil City Leos");
+        emailContent.append("\n\nBest regards,\n").append(env.getProperty("organization.name"));
 
         message.setText(emailContent.toString());
 
 
         mailSender.send(message);
-        System.out.println("Email notification sent successfully to yalleyfred@gmail.com");
+        System.out.println("Email notification sent successfully to " + env.getProperty("MAIL_TO"));
     }
 }
